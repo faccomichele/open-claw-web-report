@@ -1,0 +1,300 @@
+{
+  "lastUpdated": "2026-03-09T13:00:00Z",
+  "flows": [
+    {
+      "id": "flow-001",
+      "name": "Market Research & Report Generation",
+      "description": "End-to-end research workflow orchestrating web search, analysis, and report writing agents.",
+      "startTime": "2026-03-09T10:00:00Z",
+      "endTime": "2026-03-09T10:18:42Z",
+      "status": "completed",
+      "agents": [
+        { "id": "orchestrator", "name": "Orchestrator", "type": "orchestrator" },
+        { "id": "researcher",   "name": "Research Agent", "type": "worker" },
+        { "id": "analyst",      "name": "Analyst Agent",  "type": "worker" },
+        { "id": "writer",       "name": "Writer Agent",   "type": "worker" }
+      ],
+      "activities": [
+        {
+          "id": "a-001", "agentId": "orchestrator",
+          "action": "Initialize Flow",
+          "startTime": "2026-03-09T10:00:00Z", "endTime": "2026-03-09T10:00:03Z",
+          "status": "completed",
+          "input": "Task: Produce a market research report on AI trends in 2026.",
+          "output": "Flow initialized. Delegating to Research Agent."
+        },
+        {
+          "id": "a-002", "agentId": "researcher",
+          "action": "Web Search",
+          "startTime": "2026-03-09T10:00:03Z", "endTime": "2026-03-09T10:04:17Z",
+          "status": "completed",
+          "input": "AI trends 2026 enterprise adoption",
+          "output": "Retrieved 12 relevant articles and data points."
+        },
+        {
+          "id": "a-003", "agentId": "researcher",
+          "action": "Data Extraction",
+          "startTime": "2026-03-09T10:04:17Z", "endTime": "2026-03-09T10:06:50Z",
+          "status": "completed",
+          "input": "12 raw articles",
+          "output": "Extracted structured facts: 5 market trends, 8 statistics, 3 competitor insights."
+        },
+        {
+          "id": "a-004", "agentId": "analyst",
+          "action": "Trend Analysis",
+          "startTime": "2026-03-09T10:06:50Z", "endTime": "2026-03-09T10:11:05Z",
+          "status": "completed",
+          "input": "Structured facts from Research Agent",
+          "output": "Identified top-3 AI adoption drivers: cost reduction, automation, compliance tooling."
+        },
+        {
+          "id": "a-005", "agentId": "analyst",
+          "action": "Risk Assessment",
+          "startTime": "2026-03-09T10:11:05Z", "endTime": "2026-03-09T10:12:30Z",
+          "status": "completed",
+          "input": "Trend analysis results",
+          "output": "2 key risks identified: regulatory uncertainty, talent shortage."
+        },
+        {
+          "id": "a-006", "agentId": "writer",
+          "action": "Draft Report",
+          "startTime": "2026-03-09T10:12:30Z", "endTime": "2026-03-09T10:17:10Z",
+          "status": "completed",
+          "input": "Trend analysis + risk assessment",
+          "output": "3-page executive report drafted."
+        },
+        {
+          "id": "a-007", "agentId": "writer",
+          "action": "Format & Finalize",
+          "startTime": "2026-03-09T10:17:10Z", "endTime": "2026-03-09T10:18:30Z",
+          "status": "completed",
+          "input": "Raw draft",
+          "output": "Final report with executive summary, formatted as PDF."
+        },
+        {
+          "id": "a-008", "agentId": "orchestrator",
+          "action": "Finalize Flow",
+          "startTime": "2026-03-09T10:18:30Z", "endTime": "2026-03-09T10:18:42Z",
+          "status": "completed",
+          "input": "Final report",
+          "output": "Flow completed successfully. Report stored in S3."
+        }
+      ],
+      "messages": [
+        { "from": "orchestrator", "to": "researcher",   "content": "Please research AI market trends for 2026.",        "timestamp": "2026-03-09T10:00:03Z" },
+        { "from": "researcher",   "to": "orchestrator", "content": "Research complete. Passing structured data to Analyst.", "timestamp": "2026-03-09T10:06:50Z" },
+        { "from": "orchestrator", "to": "analyst",      "content": "Analyze the research data and identify key trends.",   "timestamp": "2026-03-09T10:06:51Z" },
+        { "from": "analyst",      "to": "orchestrator", "content": "Analysis done. Top-3 trends and 2 risks identified.",  "timestamp": "2026-03-09T10:12:30Z" },
+        { "from": "orchestrator", "to": "writer",       "content": "Write the final report using the analysis.",          "timestamp": "2026-03-09T10:12:31Z" },
+        { "from": "writer",       "to": "orchestrator", "content": "Report finalized and ready for delivery.",            "timestamp": "2026-03-09T10:18:30Z" }
+      ]
+    },
+    {
+      "id": "flow-002",
+      "name": "Customer Support Triage",
+      "description": "Automated ticket triage — classify, enrich, and route incoming support tickets.",
+      "startTime": "2026-03-09T11:30:00Z",
+      "endTime": "2026-03-09T11:32:54Z",
+      "status": "completed",
+      "agents": [
+        { "id": "orchestrator", "name": "Orchestrator",       "type": "orchestrator" },
+        { "id": "classifier",   "name": "Classifier Agent",   "type": "worker" },
+        { "id": "enricher",     "name": "Enrichment Agent",   "type": "worker" },
+        { "id": "router",       "name": "Routing Agent",      "type": "worker" }
+      ],
+      "activities": [
+        {
+          "id": "b-001", "agentId": "orchestrator",
+          "action": "Receive Ticket",
+          "startTime": "2026-03-09T11:30:00Z", "endTime": "2026-03-09T11:30:02Z",
+          "status": "completed",
+          "input": "Ticket #4821: 'Login page returns 502 intermittently'",
+          "output": "Ticket received. Starting triage workflow."
+        },
+        {
+          "id": "b-002", "agentId": "classifier",
+          "action": "Classify Ticket",
+          "startTime": "2026-03-09T11:30:02Z", "endTime": "2026-03-09T11:30:45Z",
+          "status": "completed",
+          "input": "Ticket body text",
+          "output": "Category: Infrastructure / Priority: High / Sentiment: Frustrated"
+        },
+        {
+          "id": "b-003", "agentId": "enricher",
+          "action": "Fetch Customer Context",
+          "startTime": "2026-03-09T11:30:45Z", "endTime": "2026-03-09T11:31:30Z",
+          "status": "completed",
+          "input": "Customer ID: CUS-7721",
+          "output": "Enterprise tier customer, 3 open tickets last 30 days, SLA: 4h response."
+        },
+        {
+          "id": "b-004", "agentId": "enricher",
+          "action": "Check Similar Incidents",
+          "startTime": "2026-03-09T11:31:30Z", "endTime": "2026-03-09T11:32:10Z",
+          "status": "completed",
+          "input": "Category: Infrastructure, Keywords: 502, login",
+          "output": "2 similar incidents found — both resolved by restarting auth service pod."
+        },
+        {
+          "id": "b-005", "agentId": "router",
+          "action": "Route to Team",
+          "startTime": "2026-03-09T11:32:10Z", "endTime": "2026-03-09T11:32:45Z",
+          "status": "completed",
+          "input": "Priority: High, Category: Infrastructure, SLA: 4h",
+          "output": "Routed to Platform Ops team. On-call engineer notified via PagerDuty."
+        },
+        {
+          "id": "b-006", "agentId": "orchestrator",
+          "action": "Close Triage",
+          "startTime": "2026-03-09T11:32:45Z", "endTime": "2026-03-09T11:32:54Z",
+          "status": "completed",
+          "input": "Routing complete",
+          "output": "Triage workflow completed. Ticket #4821 assigned and engineer notified."
+        }
+      ],
+      "messages": [
+        { "from": "orchestrator", "to": "classifier", "content": "Classify this support ticket.",                      "timestamp": "2026-03-09T11:30:02Z" },
+        { "from": "classifier",   "to": "orchestrator", "content": "Classified as High priority Infrastructure issue.", "timestamp": "2026-03-09T11:30:45Z" },
+        { "from": "orchestrator", "to": "enricher",   "content": "Enrich with customer context and similar incidents.", "timestamp": "2026-03-09T11:30:46Z" },
+        { "from": "enricher",     "to": "orchestrator", "content": "Enrichment complete. Enterprise customer, known issue pattern.", "timestamp": "2026-03-09T11:32:10Z" },
+        { "from": "orchestrator", "to": "router",     "content": "Route this high-priority ticket appropriately.",    "timestamp": "2026-03-09T11:32:11Z" },
+        { "from": "router",       "to": "orchestrator", "content": "Routed to Platform Ops. Engineer on-call notified.", "timestamp": "2026-03-09T11:32:45Z" }
+      ]
+    },
+    {
+      "id": "flow-003",
+      "name": "Code Review Automation",
+      "description": "Automated pull request review — static analysis, security scan, test coverage check.",
+      "startTime": "2026-03-09T12:05:00Z",
+      "endTime": null,
+      "status": "running",
+      "agents": [
+        { "id": "orchestrator", "name": "Orchestrator",         "type": "orchestrator" },
+        { "id": "linter",       "name": "Linting Agent",        "type": "worker" },
+        { "id": "security",     "name": "Security Scan Agent",  "type": "worker" },
+        { "id": "coverage",     "name": "Coverage Agent",       "type": "worker" }
+      ],
+      "activities": [
+        {
+          "id": "c-001", "agentId": "orchestrator",
+          "action": "Receive PR Event",
+          "startTime": "2026-03-09T12:05:00Z", "endTime": "2026-03-09T12:05:02Z",
+          "status": "completed",
+          "input": "PR #312: 'feat: add OAuth2 login flow'",
+          "output": "PR event received. Starting parallel analysis."
+        },
+        {
+          "id": "c-002", "agentId": "linter",
+          "action": "Run Linter",
+          "startTime": "2026-03-09T12:05:02Z", "endTime": "2026-03-09T12:06:15Z",
+          "status": "completed",
+          "input": "Changed files: auth/oauth.py, tests/test_oauth.py",
+          "output": "2 style warnings, 0 errors. PEP8 compliant."
+        },
+        {
+          "id": "c-003", "agentId": "security",
+          "action": "Dependency Audit",
+          "startTime": "2026-03-09T12:05:02Z", "endTime": "2026-03-09T12:06:40Z",
+          "status": "completed",
+          "input": "requirements.txt diff",
+          "output": "1 new dependency: authlib==1.3.0. No known CVEs."
+        },
+        {
+          "id": "c-004", "agentId": "security",
+          "action": "Secret Detection",
+          "startTime": "2026-03-09T12:06:40Z", "endTime": "2026-03-09T12:07:55Z",
+          "status": "completed",
+          "input": "Full diff of PR #312",
+          "output": "No secrets or credentials detected."
+        },
+        {
+          "id": "c-005", "agentId": "coverage",
+          "action": "Run Test Suite",
+          "startTime": "2026-03-09T12:05:02Z", "endTime": null,
+          "status": "running",
+          "input": "test suite against PR #312 branch",
+          "output": null
+        }
+      ],
+      "messages": [
+        { "from": "orchestrator", "to": "linter",    "content": "Run lint checks on PR #312.",           "timestamp": "2026-03-09T12:05:02Z" },
+        { "from": "orchestrator", "to": "security",  "content": "Run security scan on PR #312.",         "timestamp": "2026-03-09T12:05:02Z" },
+        { "from": "orchestrator", "to": "coverage",  "content": "Run test coverage check on PR #312.",   "timestamp": "2026-03-09T12:05:02Z" },
+        { "from": "linter",       "to": "orchestrator", "content": "Linting done. 2 style warnings.",    "timestamp": "2026-03-09T12:06:15Z" },
+        { "from": "security",     "to": "orchestrator", "content": "Security scan complete. Clean.",     "timestamp": "2026-03-09T12:07:55Z" }
+      ]
+    },
+    {
+      "id": "flow-004",
+      "name": "Data Pipeline Validation",
+      "description": "Multi-agent pipeline to validate, transform and load incoming data batch.",
+      "startTime": "2026-03-09T09:00:00Z",
+      "endTime": "2026-03-09T09:05:33Z",
+      "status": "failed",
+      "agents": [
+        { "id": "orchestrator", "name": "Orchestrator",      "type": "orchestrator" },
+        { "id": "validator",    "name": "Validator Agent",   "type": "worker" },
+        { "id": "transformer",  "name": "Transform Agent",   "type": "worker" },
+        { "id": "loader",       "name": "Loader Agent",      "type": "worker" }
+      ],
+      "activities": [
+        {
+          "id": "d-001", "agentId": "orchestrator",
+          "action": "Start Pipeline",
+          "startTime": "2026-03-09T09:00:00Z", "endTime": "2026-03-09T09:00:02Z",
+          "status": "completed",
+          "input": "Batch file: sales_data_20260309.csv (142 MB)",
+          "output": "Pipeline started."
+        },
+        {
+          "id": "d-002", "agentId": "validator",
+          "action": "Schema Validation",
+          "startTime": "2026-03-09T09:00:02Z", "endTime": "2026-03-09T09:01:15Z",
+          "status": "completed",
+          "input": "sales_data_20260309.csv",
+          "output": "Schema valid. 128,450 rows detected."
+        },
+        {
+          "id": "d-003", "agentId": "validator",
+          "action": "Data Quality Check",
+          "startTime": "2026-03-09T09:01:15Z", "endTime": "2026-03-09T09:02:30Z",
+          "status": "completed",
+          "input": "128,450 rows",
+          "output": "Quality score: 98.3%. 2,183 rows flagged for nulls in 'region' column."
+        },
+        {
+          "id": "d-004", "agentId": "transformer",
+          "action": "Normalize & Enrich",
+          "startTime": "2026-03-09T09:02:30Z", "endTime": "2026-03-09T09:04:00Z",
+          "status": "completed",
+          "input": "Validated data",
+          "output": "Data normalized. Currency converted, timestamps standardized."
+        },
+        {
+          "id": "d-005", "agentId": "loader",
+          "action": "Load to Data Warehouse",
+          "startTime": "2026-03-09T09:04:00Z", "endTime": "2026-03-09T09:05:33Z",
+          "status": "failed",
+          "input": "Transformed data (128,450 rows)",
+          "output": "ERROR: Connection to data warehouse timed out after 90s. OperationalError: connection refused on port 5439."
+        },
+        {
+          "id": "d-006", "agentId": "orchestrator",
+          "action": "Handle Failure",
+          "startTime": "2026-03-09T09:05:33Z", "endTime": "2026-03-09T09:05:33Z",
+          "status": "failed",
+          "input": "Loader failure event",
+          "output": "Flow failed. Alert sent. Retry scheduled in 15 minutes."
+        }
+      ],
+      "messages": [
+        { "from": "orchestrator", "to": "validator",    "content": "Validate incoming batch file.",              "timestamp": "2026-03-09T09:00:02Z" },
+        { "from": "validator",    "to": "orchestrator", "content": "Validation complete. Data quality 98.3%.",   "timestamp": "2026-03-09T09:02:30Z" },
+        { "from": "orchestrator", "to": "transformer",  "content": "Transform and normalize the validated data.", "timestamp": "2026-03-09T09:02:31Z" },
+        { "from": "transformer",  "to": "orchestrator", "content": "Transformation complete.",                   "timestamp": "2026-03-09T09:04:00Z" },
+        { "from": "orchestrator", "to": "loader",       "content": "Load transformed data to warehouse.",       "timestamp": "2026-03-09T09:04:01Z" },
+        { "from": "loader",       "to": "orchestrator", "content": "FAILED: Warehouse connection timed out.",   "timestamp": "2026-03-09T09:05:33Z" }
+      ]
+    }
+  ]
+}
