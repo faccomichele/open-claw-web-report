@@ -21,7 +21,8 @@
           "startTime": "2026-03-09T10:00:00Z", "endTime": "2026-03-09T10:00:03Z",
           "status": "completed",
           "input": "Task: Produce a market research report on AI trends in 2026.",
-          "output": "Flow initialized. Delegating to Research Agent."
+          "output": "Flow initialized. Delegating to Research Agent.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         },
         {
           "id": "a-002", "agentId": "researcher",
@@ -29,7 +30,8 @@
           "startTime": "2026-03-09T10:00:03Z", "endTime": "2026-03-09T10:04:17Z",
           "status": "completed",
           "input": "AI trends 2026 enterprise adoption",
-          "output": "Retrieved 12 relevant articles and data points."
+          "output": "Retrieved 12 relevant articles and data points.",
+          "model": "gpt-4o", "tokensIn": 312, "tokensOut": 87
         },
         {
           "id": "a-003", "agentId": "researcher",
@@ -37,7 +39,8 @@
           "startTime": "2026-03-09T10:04:17Z", "endTime": "2026-03-09T10:06:50Z",
           "status": "completed",
           "input": "12 raw articles",
-          "output": "Extracted structured facts: 5 market trends, 8 statistics, 3 competitor insights."
+          "output": "Extracted structured facts: 5 market trends, 8 statistics, 3 competitor insights.",
+          "model": "gpt-4o", "tokensIn": 4821, "tokensOut": 634
         },
         {
           "id": "a-004", "agentId": "analyst",
@@ -45,7 +48,8 @@
           "startTime": "2026-03-09T10:06:50Z", "endTime": "2026-03-09T10:11:05Z",
           "status": "completed",
           "input": "Structured facts from Research Agent",
-          "output": "Identified top-3 AI adoption drivers: cost reduction, automation, compliance tooling."
+          "output": "Identified top-3 AI adoption drivers: cost reduction, automation, compliance tooling.",
+          "model": "claude-3-5-sonnet", "tokensIn": 1205, "tokensOut": 489
         },
         {
           "id": "a-005", "agentId": "analyst",
@@ -53,7 +57,8 @@
           "startTime": "2026-03-09T10:11:05Z", "endTime": "2026-03-09T10:12:30Z",
           "status": "completed",
           "input": "Trend analysis results",
-          "output": "2 key risks identified: regulatory uncertainty, talent shortage."
+          "output": "2 key risks identified: regulatory uncertainty, talent shortage.",
+          "model": "claude-3-5-sonnet", "tokensIn": 743, "tokensOut": 218
         },
         {
           "id": "a-006", "agentId": "writer",
@@ -61,7 +66,8 @@
           "startTime": "2026-03-09T10:12:30Z", "endTime": "2026-03-09T10:17:10Z",
           "status": "completed",
           "input": "Trend analysis + risk assessment",
-          "output": "3-page executive report drafted."
+          "output": "3-page executive report drafted.",
+          "model": "gpt-4o", "tokensIn": 2190, "tokensOut": 3850
         },
         {
           "id": "a-007", "agentId": "writer",
@@ -69,7 +75,8 @@
           "startTime": "2026-03-09T10:17:10Z", "endTime": "2026-03-09T10:18:30Z",
           "status": "completed",
           "input": "Raw draft",
-          "output": "Final report with executive summary, formatted as PDF."
+          "output": "Final report with executive summary, formatted as PDF.",
+          "model": "gpt-4o", "tokensIn": 4120, "tokensOut": 4380
         },
         {
           "id": "a-008", "agentId": "orchestrator",
@@ -77,7 +84,8 @@
           "startTime": "2026-03-09T10:18:30Z", "endTime": "2026-03-09T10:18:42Z",
           "status": "completed",
           "input": "Final report",
-          "output": "Flow completed successfully. Report stored in S3."
+          "output": "Flow completed successfully. Report stored in S3.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         }
       ],
       "messages": [
@@ -109,7 +117,8 @@
           "startTime": "2026-03-09T11:30:00Z", "endTime": "2026-03-09T11:30:02Z",
           "status": "completed",
           "input": "Ticket #4821: 'Login page returns 502 intermittently'",
-          "output": "Ticket received. Starting triage workflow."
+          "output": "Ticket received. Starting triage workflow.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         },
         {
           "id": "b-002", "agentId": "classifier",
@@ -117,7 +126,8 @@
           "startTime": "2026-03-09T11:30:02Z", "endTime": "2026-03-09T11:30:45Z",
           "status": "completed",
           "input": "Ticket body text",
-          "output": "Category: Infrastructure / Priority: High / Sentiment: Frustrated"
+          "output": "Category: Infrastructure / Priority: High / Sentiment: Frustrated",
+          "model": "gpt-4o-mini", "tokensIn": 287, "tokensOut": 42
         },
         {
           "id": "b-003", "agentId": "enricher",
@@ -125,7 +135,8 @@
           "startTime": "2026-03-09T11:30:45Z", "endTime": "2026-03-09T11:31:30Z",
           "status": "completed",
           "input": "Customer ID: CUS-7721",
-          "output": "Enterprise tier customer, 3 open tickets last 30 days, SLA: 4h response."
+          "output": "Enterprise tier customer, 3 open tickets last 30 days, SLA: 4h response.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         },
         {
           "id": "b-004", "agentId": "enricher",
@@ -133,7 +144,8 @@
           "startTime": "2026-03-09T11:31:30Z", "endTime": "2026-03-09T11:32:10Z",
           "status": "completed",
           "input": "Category: Infrastructure, Keywords: 502, login",
-          "output": "2 similar incidents found — both resolved by restarting auth service pod."
+          "output": "2 similar incidents found — both resolved by restarting auth service pod.",
+          "model": "gpt-4o-mini", "tokensIn": 154, "tokensOut": 63
         },
         {
           "id": "b-005", "agentId": "router",
@@ -141,7 +153,8 @@
           "startTime": "2026-03-09T11:32:10Z", "endTime": "2026-03-09T11:32:45Z",
           "status": "completed",
           "input": "Priority: High, Category: Infrastructure, SLA: 4h",
-          "output": "Routed to Platform Ops team. On-call engineer notified via PagerDuty."
+          "output": "Routed to Platform Ops team. On-call engineer notified via PagerDuty.",
+          "model": "gpt-4o-mini", "tokensIn": 198, "tokensOut": 55
         },
         {
           "id": "b-006", "agentId": "orchestrator",
@@ -149,7 +162,8 @@
           "startTime": "2026-03-09T11:32:45Z", "endTime": "2026-03-09T11:32:54Z",
           "status": "completed",
           "input": "Routing complete",
-          "output": "Triage workflow completed. Ticket #4821 assigned and engineer notified."
+          "output": "Triage workflow completed. Ticket #4821 assigned and engineer notified.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         }
       ],
       "messages": [
@@ -181,7 +195,8 @@
           "startTime": "2026-03-09T12:05:00Z", "endTime": "2026-03-09T12:05:02Z",
           "status": "completed",
           "input": "PR #312: 'feat: add OAuth2 login flow'",
-          "output": "PR event received. Starting parallel analysis."
+          "output": "PR event received. Starting parallel analysis.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         },
         {
           "id": "c-002", "agentId": "linter",
@@ -189,7 +204,8 @@
           "startTime": "2026-03-09T12:05:02Z", "endTime": "2026-03-09T12:06:15Z",
           "status": "completed",
           "input": "Changed files: auth/oauth.py, tests/test_oauth.py",
-          "output": "2 style warnings, 0 errors. PEP8 compliant."
+          "output": "2 style warnings, 0 errors. PEP8 compliant.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         },
         {
           "id": "c-003", "agentId": "security",
@@ -197,7 +213,8 @@
           "startTime": "2026-03-09T12:05:02Z", "endTime": "2026-03-09T12:06:40Z",
           "status": "completed",
           "input": "requirements.txt diff",
-          "output": "1 new dependency: authlib==1.3.0. No known CVEs."
+          "output": "1 new dependency: authlib==1.3.0. No known CVEs.",
+          "model": "gpt-4o-mini", "tokensIn": 412, "tokensOut": 73
         },
         {
           "id": "c-004", "agentId": "security",
@@ -205,7 +222,8 @@
           "startTime": "2026-03-09T12:06:40Z", "endTime": "2026-03-09T12:07:55Z",
           "status": "completed",
           "input": "Full diff of PR #312",
-          "output": "No secrets or credentials detected."
+          "output": "No secrets or credentials detected.",
+          "model": "gpt-4o-mini", "tokensIn": 1876, "tokensOut": 29
         },
         {
           "id": "c-005", "agentId": "coverage",
@@ -213,7 +231,8 @@
           "startTime": "2026-03-09T12:05:02Z", "endTime": null,
           "status": "running",
           "input": "test suite against PR #312 branch",
-          "output": null
+          "output": null,
+          "model": null, "tokensIn": 0, "tokensOut": 0
         }
       ],
       "messages": [
@@ -244,7 +263,8 @@
           "startTime": "2026-03-09T09:00:00Z", "endTime": "2026-03-09T09:00:02Z",
           "status": "completed",
           "input": "Batch file: sales_data_20260309.csv (142 MB)",
-          "output": "Pipeline started."
+          "output": "Pipeline started.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         },
         {
           "id": "d-002", "agentId": "validator",
@@ -252,7 +272,8 @@
           "startTime": "2026-03-09T09:00:02Z", "endTime": "2026-03-09T09:01:15Z",
           "status": "completed",
           "input": "sales_data_20260309.csv",
-          "output": "Schema valid. 128,450 rows detected."
+          "output": "Schema valid. 128,450 rows detected.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         },
         {
           "id": "d-003", "agentId": "validator",
@@ -260,7 +281,8 @@
           "startTime": "2026-03-09T09:01:15Z", "endTime": "2026-03-09T09:02:30Z",
           "status": "completed",
           "input": "128,450 rows",
-          "output": "Quality score: 98.3%. 2,183 rows flagged for nulls in 'region' column."
+          "output": "Quality score: 98.3%. 2,183 rows flagged for nulls in 'region' column.",
+          "model": "gpt-4o-mini", "tokensIn": 541, "tokensOut": 96
         },
         {
           "id": "d-004", "agentId": "transformer",
@@ -268,7 +290,8 @@
           "startTime": "2026-03-09T09:02:30Z", "endTime": "2026-03-09T09:04:00Z",
           "status": "completed",
           "input": "Validated data",
-          "output": "Data normalized. Currency converted, timestamps standardized."
+          "output": "Data normalized. Currency converted, timestamps standardized.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         },
         {
           "id": "d-005", "agentId": "loader",
@@ -276,7 +299,8 @@
           "startTime": "2026-03-09T09:04:00Z", "endTime": "2026-03-09T09:05:33Z",
           "status": "failed",
           "input": "Transformed data (128,450 rows)",
-          "output": "ERROR: Connection to data warehouse timed out after 90s. OperationalError: connection refused on port 5439."
+          "output": "ERROR: Connection to data warehouse timed out after 90s. OperationalError: connection refused on port 5439.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         },
         {
           "id": "d-006", "agentId": "orchestrator",
@@ -284,7 +308,8 @@
           "startTime": "2026-03-09T09:05:33Z", "endTime": "2026-03-09T09:05:33Z",
           "status": "failed",
           "input": "Loader failure event",
-          "output": "Flow failed. Alert sent. Retry scheduled in 15 minutes."
+          "output": "Flow failed. Alert sent. Retry scheduled in 15 minutes.",
+          "model": null, "tokensIn": 0, "tokensOut": 0
         }
       ],
       "messages": [
