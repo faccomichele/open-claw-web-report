@@ -11,7 +11,10 @@
  *   "flows": [ { id, name, description, startTime, endTime, status,
  *                agents: [{id, name, type}],
  *                activities: [{id, agentId, action, startTime, endTime,
- *                              status, input, output}],
+ *                              status, input, output,
+ *                              model (optional, default null),
+ *                              tokensIn (optional, default 0),
+ *                              tokensOut (optional, default 0)}],
  *                messages: [{from, to, content, timestamp}] } ]
  * }
  *
@@ -19,7 +22,10 @@
  * {
  *   "lastUpdated": "<ISO-8601>",
  *   "agents": [ { id, name, type, lastSeen, status,
- *                 heartbeats: [{timestamp, status, message}] } ]
+ *                 heartbeats: [{timestamp, status, message,
+ *                               model (optional, default null),
+ *                               tokensIn (optional, default 0),
+ *                               tokensOut (optional, default 0)}] } ]
  * }
  */
 
@@ -460,6 +466,10 @@
   /* ------------------------------------------------------------------ */
   function buildActivityCard(act) {
     const durationStr = calcDuration(act.startTime, act.endTime);
+    const hasModel = act.model != null;
+    const tokensIn  = act.tokensIn  || 0;
+    const tokensOut = act.tokensOut || 0;
+    const hasTokens = tokensIn > 0 || tokensOut > 0;
     return `
       <div class="timeline-activity timeline-activity--${escHtml(act.status)}">
         <div class="timeline-activity__header">
@@ -467,6 +477,11 @@
           <span class="badge badge--${escHtml(act.status)}">${statusIcon(act.status)} ${escHtml(act.status)}</span>
           ${durationStr ? `<span style="font-size:11px;color:var(--text-muted)">${escHtml(durationStr)}</span>` : ''}
         </div>
+        ${(hasModel || hasTokens) ? `
+        <div class="model-info">
+          ${hasModel ? `<span class="model-info__model">${escHtml(act.model)}</span>` : ''}
+          ${hasTokens ? `<span class="model-info__tokens"><span class="model-info__tokens-in">↓ ${tokensIn.toLocaleString()}</span><span class="model-info__tokens-out">↑ ${tokensOut.toLocaleString()}</span></span>` : ''}
+        </div>` : ''}
         ${(act.input != null || act.output != null) ? `
         <div class="io-grid">
           ${act.input != null ? `
@@ -635,6 +650,10 @@
       const logContainer = historyCard.querySelector(`#hb-log-${agent.id}`);
       const sorted = [...beats].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
       sorted.forEach(beat => {
+        const hasModel  = beat.model != null;
+        const tokensIn  = beat.tokensIn  || 0;
+        const tokensOut = beat.tokensOut || 0;
+        const hasTokens = tokensIn > 0 || tokensOut > 0;
         const row = document.createElement('div');
         row.className = `hb-row hb-row--${escHtml(beat.status)}`;
         row.innerHTML = `
@@ -642,6 +661,11 @@
           <span class="hb-row__time">${formatDateTime(beat.timestamp)}</span>
           <span class="badge badge--${escHtml(beat.status)}">${hbStatusIcon(beat.status)} ${escHtml(beat.status)}</span>
           <span class="hb-row__message">${escHtml(beat.message || '')}</span>
+          ${(hasModel || hasTokens) ? `
+          <span class="model-info model-info--inline">
+            ${hasModel ? `<span class="model-info__model">${escHtml(beat.model)}</span>` : ''}
+            ${hasTokens ? `<span class="model-info__tokens"><span class="model-info__tokens-in">↓ ${tokensIn.toLocaleString()}</span><span class="model-info__tokens-out">↑ ${tokensOut.toLocaleString()}</span></span>` : ''}
+          </span>` : ''}
         `;
         logContainer.appendChild(row);
       });
