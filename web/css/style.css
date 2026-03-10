@@ -1,5 +1,6 @@
 /* ===== Reset & base ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
 
 :root {
   --bg:           #f4f6f9;
@@ -39,7 +40,7 @@ ul { list-style: none; }
 /* ===== Layout ===== */
 .app {
   display: grid;
-  grid-template-rows: 56px 1fr;
+  grid-template-rows: 56px 44px 1fr;
   grid-template-columns: 300px 1fr;
   height: 100vh;
   overflow: hidden;
@@ -96,6 +97,39 @@ ul { list-style: none; }
 .header__refresh-btn.spinning svg { animation: spin .7s linear infinite; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== Navigation tabs ===== */
+.nav {
+  grid-column: 1 / -1;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-end;
+  padding: 0 16px;
+  gap: 2px;
+}
+
+.nav__tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  transition: color .15s, border-color .15s;
+}
+
+.nav__tab:hover { color: var(--text); }
+
+.nav__tab--active {
+  color: var(--running);
+  border-bottom-color: var(--running);
+}
 
 /* ===== Sidebar ===== */
 .sidebar {
@@ -177,6 +211,8 @@ ul { list-style: none; }
 .badge--completed { background: #f0fff4; color: var(--completed); }
 .badge--running   { background: #ebf8ff; color: var(--running); animation: pulse 2s infinite; }
 .badge--failed    { background: #fff5f5; color: var(--failed); }
+.badge--active    { background: #f0fff4; color: var(--completed); }
+.badge--ok        { background: #ebf8ff; color: var(--running); }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
@@ -519,6 +555,66 @@ ul { list-style: none; }
   margin-bottom: 12px;
 }
 
+/* ===== Agent list item (heartbeats sidebar) ===== */
+.agent-item {
+  padding: 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background .12s;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+}
+
+.agent-item:hover  { background: var(--surface-alt); }
+.agent-item.active { background: #ebf8ff; border-color: #bee3f8; }
+
+/* ===== Heartbeat log ===== */
+.hb-log {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hb-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  background: var(--surface-alt);
+  font-size: 12px;
+}
+
+.hb-row--active { border-left-color: var(--completed); }
+.hb-row--ok     { border-left-color: var(--running); }
+.hb-row--failed { border-left-color: var(--failed); background: #fff5f5; border-color: #fed7d7; border-left-color: var(--failed); }
+
+.hb-row__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.hb-row--active .hb-row__dot { background: var(--completed); }
+.hb-row--ok     .hb-row__dot { background: var(--running); }
+.hb-row--failed .hb-row__dot { background: var(--failed); }
+
+.hb-row__time {
+  color: var(--text-light);
+  font-size: 11px;
+  white-space: nowrap;
+  min-width: 150px;
+}
+
+.hb-row__message {
+  color: var(--text-muted);
+  flex: 1;
+  line-height: 1.4;
+}
+
 /* ===== Scrollbar ===== */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -528,7 +624,7 @@ ul { list-style: none; }
 @media (max-width: 768px) {
   .app {
     grid-template-columns: 1fr;
-    grid-template-rows: 56px auto 1fr;
+    grid-template-rows: 56px 44px auto 1fr;
   }
 
   .sidebar {
@@ -546,4 +642,6 @@ ul { list-style: none; }
   .timeline-item:not(:last-child) .timeline-item__line {
     left: 110px;
   }
+
+  .hb-row__time { min-width: 100px; }
 }

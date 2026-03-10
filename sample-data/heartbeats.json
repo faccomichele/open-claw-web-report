@@ -1,0 +1,100 @@
+{
+  "lastUpdated": "2026-03-09T13:05:00Z",
+  "agents": [
+    {
+      "id": "orchestrator-1",
+      "name": "Orchestrator",
+      "type": "orchestrator",
+      "lastSeen": "2026-03-09T13:05:00Z",
+      "status": "active",
+      "heartbeats": [
+        { "timestamp": "2026-03-09T13:05:00Z", "status": "active",  "message": "Dispatched flow: Market Research & Report Generation (flow-001)" },
+        { "timestamp": "2026-03-09T13:00:00Z", "status": "ok",      "message": "Heartbeat OK — idle, awaiting tasks" },
+        { "timestamp": "2026-03-09T12:55:00Z", "status": "ok",      "message": "Heartbeat OK — idle, awaiting tasks" },
+        { "timestamp": "2026-03-09T12:50:00Z", "status": "active",  "message": "Flow completed: Customer Support Triage (flow-002)" },
+        { "timestamp": "2026-03-09T12:45:00Z", "status": "ok",      "message": "Heartbeat OK — idle, awaiting tasks" },
+        { "timestamp": "2026-03-09T12:40:00Z", "status": "active",  "message": "Dispatched flow: Code Review Automation (flow-003)" },
+        { "timestamp": "2026-03-09T12:35:00Z", "status": "ok",      "message": "Heartbeat OK — idle, awaiting tasks" },
+        { "timestamp": "2026-03-09T12:30:00Z", "status": "failed",  "message": "Flow failed: Data Pipeline Validation (flow-004) — warehouse connection refused" },
+        { "timestamp": "2026-03-09T12:25:00Z", "status": "ok",      "message": "Heartbeat OK — idle, awaiting tasks" },
+        { "timestamp": "2026-03-09T12:20:00Z", "status": "active",  "message": "Dispatched flow: Data Pipeline Validation (flow-004)" }
+      ]
+    },
+    {
+      "id": "research-agent-1",
+      "name": "Research Agent",
+      "type": "worker",
+      "lastSeen": "2026-03-09T13:04:50Z",
+      "status": "active",
+      "heartbeats": [
+        { "timestamp": "2026-03-09T13:04:50Z", "status": "active",  "message": "Completed web search: retrieved 12 articles on AI trends 2026" },
+        { "timestamp": "2026-03-09T13:00:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:55:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:50:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:45:00Z", "status": "active",  "message": "Completed data extraction: structured facts from 12 articles" },
+        { "timestamp": "2026-03-09T12:40:00Z", "status": "active",  "message": "Started research task: AI market trends 2026" },
+        { "timestamp": "2026-03-09T12:35:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" }
+      ]
+    },
+    {
+      "id": "analyst-agent-1",
+      "name": "Analyst Agent",
+      "type": "worker",
+      "lastSeen": "2026-03-09T13:03:00Z",
+      "status": "ok",
+      "heartbeats": [
+        { "timestamp": "2026-03-09T13:03:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:58:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:53:00Z", "status": "active",  "message": "Risk assessment completed: 2 key risks identified" },
+        { "timestamp": "2026-03-09T12:48:00Z", "status": "active",  "message": "Trend analysis completed: top-3 AI adoption drivers identified" },
+        { "timestamp": "2026-03-09T12:43:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:38:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" }
+      ]
+    },
+    {
+      "id": "security-agent-1",
+      "name": "Security Scan Agent",
+      "type": "worker",
+      "lastSeen": "2026-03-09T13:02:30Z",
+      "status": "active",
+      "heartbeats": [
+        { "timestamp": "2026-03-09T13:02:30Z", "status": "active",  "message": "Secret detection scan completed: no credentials detected in PR #312" },
+        { "timestamp": "2026-03-09T12:57:30Z", "status": "active",  "message": "Dependency audit completed: authlib==1.3.0 — no known CVEs" },
+        { "timestamp": "2026-03-09T12:52:30Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:47:30Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:42:30Z", "status": "failed",  "message": "CVE database sync failed: upstream service unreachable (HTTP 503)" },
+        { "timestamp": "2026-03-09T12:37:30Z", "status": "ok",      "message": "Heartbeat OK — standing by" }
+      ]
+    },
+    {
+      "id": "loader-agent-1",
+      "name": "Loader Agent",
+      "type": "worker",
+      "lastSeen": "2026-03-09T12:35:33Z",
+      "status": "failed",
+      "heartbeats": [
+        { "timestamp": "2026-03-09T12:35:33Z", "status": "failed",  "message": "Load failed: connection to data warehouse timed out after 90s (port 5439)" },
+        { "timestamp": "2026-03-09T12:30:00Z", "status": "active",  "message": "Loading batch to data warehouse: 128,450 rows — in progress" },
+        { "timestamp": "2026-03-09T12:25:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:20:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:15:00Z", "status": "active",  "message": "Successfully loaded previous batch: 95,210 rows" },
+        { "timestamp": "2026-03-09T12:10:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" }
+      ]
+    },
+    {
+      "id": "coverage-agent-1",
+      "name": "Coverage Agent",
+      "type": "worker",
+      "lastSeen": "2026-03-09T13:05:00Z",
+      "status": "active",
+      "heartbeats": [
+        { "timestamp": "2026-03-09T13:05:00Z", "status": "active",  "message": "Running test suite against PR #312 branch — 72% complete" },
+        { "timestamp": "2026-03-09T13:00:00Z", "status": "active",  "message": "Test suite started for PR #312: auth/oauth.py" },
+        { "timestamp": "2026-03-09T12:55:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:50:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" },
+        { "timestamp": "2026-03-09T12:45:00Z", "status": "active",  "message": "Previous coverage run completed: 87.4% overall coverage" },
+        { "timestamp": "2026-03-09T12:40:00Z", "status": "ok",      "message": "Heartbeat OK — standing by" }
+      ]
+    }
+  ]
+}
