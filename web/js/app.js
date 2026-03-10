@@ -1,10 +1,11 @@
 /**
  * Open Claw Web Report — app.js
  *
- * Fetches agent flow data from `data/flows.json` (relative to the same
- * CloudFront/S3 origin) and renders the interactive activity-flow dashboard.
+ * Fetches agent flow data from `data/flows.json` and heartbeat data from
+ * `data/heartbeats.json` (relative to the same CloudFront/S3 origin) and
+ * renders the interactive activity-flow and heartbeat dashboards.
  *
- * JSON schema expected:
+ * flows.json schema:
  * {
  *   "lastUpdated": "<ISO-8601>",
  *   "flows": [ { id, name, description, startTime, endTime, status,
@@ -12,6 +13,13 @@
  *                activities: [{id, agentId, action, startTime, endTime,
  *                              status, input, output}],
  *                messages: [{from, to, content, timestamp}] } ]
+ * }
+ *
+ * heartbeats.json schema:
+ * {
+ *   "lastUpdated": "<ISO-8601>",
+ *   "agents": [ { id, name, type, lastSeen, status,
+ *                 heartbeats: [{timestamp, status, message}] } ]
  * }
  */
 
@@ -21,7 +29,8 @@
   /* ------------------------------------------------------------------ */
   /* Configuration                                                        */
   /* ------------------------------------------------------------------ */
-  const DATA_URL = 'data/flows.json';
+  const DATA_URL       = 'data/flows.json';
+  const HEARTBEATS_URL = 'data/heartbeats.json';
   const AUTO_REFRESH_MS = 30_000; // 30 s
 
   /* Agent-type colours (deterministic from agent index as fallback) */
@@ -34,11 +43,20 @@
   /* State                                                                */
   /* ------------------------------------------------------------------ */
   let state = {
+    /* Flows */
     flows: [],
     selectedId: null,
     lastUpdated: null,
     loading: false,
     error: null,
+    /* Heartbeats */
+    agents: [],
+    selectedAgentId: null,
+    hbLastUpdated: null,
+    hbLoading: false,
+    hbError: null,
+    /* Active view */
+    activeView: 'flows',   /* 'flows' | 'heartbeats' */
   };
 
   /* ------------------------------------------------------------------ */
@@ -96,7 +114,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Data fetching                                                        */
+  /* Data fetching — flows                                               */
   /* ------------------------------------------------------------------ */
   async function fetchFlows() {
     state.loading = true;
@@ -124,7 +142,38 @@
       state.error = err.message;
     } finally {
       state.loading = false;
-      render();
+      if (state.activeView === 'flows') render();
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Data fetching — heartbeats                                          */
+  /* ------------------------------------------------------------------ */
+  async function fetchHeartbeats() {
+    state.hbLoading = true;
+    state.hbError = null;
+    renderHeader();
+
+    try {
+      const res = await fetch(HEARTBEATS_URL + '?_=' + Date.now());
+      if (!res.ok) throw new Error(`HTTP ${res.status} — ${res.statusText}`);
+      const json = await res.json();
+
+      state.agents = (json.agents || []);
+      state.hbLastUpdated = json.lastUpdated || null;
+
+      /* Keep the selected agent in sync after refresh */
+      if (state.selectedAgentId && !state.agents.find(a => a.id === state.selectedAgentId)) {
+        state.selectedAgentId = null;
+      }
+      if (!state.selectedAgentId && state.agents.length) {
+        state.selectedAgentId = state.agents[0].id;
+      }
+    } catch (err) {
+      state.hbError = err.message;
+    } finally {
+      state.hbLoading = false;
+      if (state.activeView === 'heartbeats') render();
     }
   }
 
@@ -133,20 +182,31 @@
   /* ------------------------------------------------------------------ */
   function render() {
     renderHeader();
-    renderSidebar();
-    renderMain();
+    if (state.activeView === 'flows') {
+      renderSidebar();
+      renderMain();
+    } else {
+      renderHeartbeatSidebar();
+      renderHeartbeatMain();
+    }
   }
 
   /* ------------------------------------------------------------------ */
   /* Render: header                                                       */
   /* ------------------------------------------------------------------ */
   function renderHeader() {
-    dom.lastUpdated.textContent = state.lastUpdated
-      ? 'Last updated: ' + formatDateTime(state.lastUpdated)
-      : '';
-    dom.flowCount.textContent = state.flows.length;
+    const isFlows = state.activeView === 'flows';
+    const loading     = isFlows ? state.loading     : state.hbLoading;
+    const count       = isFlows ? state.flows.length : state.agents.length;
+    const lastUpdated = isFlows ? state.lastUpdated  : state.hbLastUpdated;
 
-    if (state.loading) {
+    dom.dataLabel.textContent = isFlows ? 'flows' : 'agents';
+    dom.flowCount.textContent = count;
+    dom.lastUpdated.textContent = lastUpdated
+      ? 'Last updated: ' + formatDateTime(lastUpdated)
+      : '';
+
+    if (loading) {
       dom.refreshBtn.classList.add('spinning');
     } else {
       dom.refreshBtn.classList.remove('spinning');
@@ -201,13 +261,13 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Render: main panel                                                   */
+  /* Render: main panel (flows)                                          */
   /* ------------------------------------------------------------------ */
   function renderMain() {
-    dom.mainPanel.innerHTML = '';
+    dom.mainFlows.innerHTML = '';
 
     if (state.loading && !state.flows.length) {
-      dom.mainPanel.innerHTML = `
+      dom.mainFlows.innerHTML = `
         <div class="loader">
           <div class="loader__ring"></div>
           <span>Loading flows…</span>
@@ -216,7 +276,7 @@
     }
 
     if (state.error) {
-      dom.mainPanel.innerHTML = `
+      dom.mainFlows.innerHTML = `
         <div class="error-banner">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -229,7 +289,7 @@
     }
 
     if (!state.flows.length) {
-      dom.mainPanel.innerHTML = `
+      dom.mainFlows.innerHTML = `
         <div class="empty-state">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -245,7 +305,7 @@
     const flow = state.flows.find(f => f.id === state.selectedId);
     if (!flow) return;
 
-    dom.mainPanel.appendChild(buildFlowDetail(flow));
+    dom.mainFlows.appendChild(buildFlowDetail(flow));
   }
 
   /* ------------------------------------------------------------------ */
@@ -424,22 +484,247 @@
   }
 
   /* ------------------------------------------------------------------ */
+  /* Render: heartbeat sidebar                                            */
+  /* ------------------------------------------------------------------ */
+  function renderHeartbeatSidebar() {
+    dom.hbSidebarCount.textContent = state.agents.length;
+    dom.agentList.innerHTML = '';
+
+    if (!state.agents.length && !state.hbLoading) {
+      dom.agentList.innerHTML =
+        '<li style="padding:16px;color:var(--text-muted);font-size:12px;text-align:center">No agents found.</li>';
+      return;
+    }
+
+    state.agents.forEach(agent => {
+      const li = document.createElement('li');
+      li.className = 'agent-item' + (agent.id === state.selectedAgentId ? ' active' : '');
+      li.dataset.id = agent.id;
+
+      li.innerHTML = `
+        <div class="flow-item__top">
+          <span class="flow-item__name">${escHtml(agent.name)}</span>
+          <span class="badge badge--${escHtml(agent.status)}">${hbStatusIcon(agent.status)} ${escHtml(agent.status)}</span>
+        </div>
+        <p class="flow-item__desc">${escHtml(agent.type)}</p>
+        <p class="flow-item__time">Last seen: ${formatDateTime(agent.lastSeen)}</p>
+      `;
+
+      li.addEventListener('click', () => {
+        state.selectedAgentId = agent.id;
+        renderHeartbeatSidebar();
+        renderHeartbeatMain();
+      });
+
+      dom.agentList.appendChild(li);
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Render: heartbeat main panel                                         */
+  /* ------------------------------------------------------------------ */
+  function renderHeartbeatMain() {
+    dom.mainHeartbeats.innerHTML = '';
+
+    if (state.hbLoading && !state.agents.length) {
+      dom.mainHeartbeats.innerHTML = `
+        <div class="loader">
+          <div class="loader__ring"></div>
+          <span>Loading heartbeats…</span>
+        </div>`;
+      return;
+    }
+
+    if (state.hbError) {
+      dom.mainHeartbeats.innerHTML = `
+        <div class="error-banner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>Could not load data: <strong>${escHtml(state.hbError)}</strong></span>
+        </div>`;
+      return;
+    }
+
+    if (!state.agents.length) {
+      dom.mainHeartbeats.innerHTML = `
+        <div class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <h3>No agents available</h3>
+          <p>Upload a <code>data/heartbeats.json</code> file to get started.</p>
+        </div>`;
+      return;
+    }
+
+    const agent = state.agents.find(a => a.id === state.selectedAgentId);
+    if (!agent) return;
+
+    dom.mainHeartbeats.appendChild(buildAgentDetail(agent));
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Build: agent heartbeat detail                                        */
+  /* ------------------------------------------------------------------ */
+  function buildAgentDetail(agent) {
+    const frag = document.createDocumentFragment();
+    const beats = agent.heartbeats || [];
+    const activeCount = beats.filter(h => h.status === 'active').length;
+    const okCount     = beats.filter(h => h.status === 'ok').length;
+    const failedCount = beats.filter(h => h.status === 'failed').length;
+
+    /* ---- Overview card ---- */
+    const overview = document.createElement('div');
+    overview.className = 'card';
+    overview.innerHTML = `
+      <div class="card__header">
+        <div>
+          <h2 class="card__title">${escHtml(agent.name)}</h2>
+          <p class="card__desc">${escHtml(agent.type)}</p>
+        </div>
+        <span class="badge badge--${escHtml(agent.status)}">${hbStatusIcon(agent.status)} ${escHtml(agent.status)}</span>
+      </div>
+      <div class="card__body">
+        <div class="metrics">
+          <div class="metric">
+            <span class="metric__label">Last Seen</span>
+            <span class="metric__value">${formatDateTime(agent.lastSeen)}</span>
+          </div>
+          <div class="metric">
+            <span class="metric__label">Total Beats</span>
+            <span class="metric__value">${beats.length}</span>
+          </div>
+          <div class="metric">
+            <span class="metric__label">Active</span>
+            <span class="metric__value" style="color:var(--completed)">${activeCount}</span>
+          </div>
+          <div class="metric">
+            <span class="metric__label">OK</span>
+            <span class="metric__value" style="color:var(--running)">${okCount}</span>
+          </div>
+          <div class="metric">
+            <span class="metric__label">Failed</span>
+            <span class="metric__value" style="color:var(--failed)">${failedCount}</span>
+          </div>
+          <div class="metric">
+            <span class="metric__label">Agent ID</span>
+            <span class="metric__value" style="font-family:monospace;font-size:12px">${escHtml(agent.id)}</span>
+          </div>
+        </div>
+      </div>`;
+    frag.appendChild(overview);
+
+    /* ---- Heartbeat history card ---- */
+    if (beats.length) {
+      const historyCard = document.createElement('div');
+      historyCard.className = 'card';
+      historyCard.innerHTML = `
+        <div class="card__header">
+          <h3 class="card__title" style="font-size:14px">Heartbeat History</h3>
+        </div>
+        <div class="card__body">
+          <div class="hb-log" id="hb-log-${escHtml(agent.id)}"></div>
+        </div>`;
+      frag.appendChild(historyCard);
+
+      /* Populate rows newest-first */
+      const logContainer = historyCard.querySelector(`#hb-log-${agent.id}`);
+      const sorted = [...beats].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      sorted.forEach(beat => {
+        const row = document.createElement('div');
+        row.className = `hb-row hb-row--${escHtml(beat.status)}`;
+        row.innerHTML = `
+          <div class="hb-row__dot" aria-hidden="true"></div>
+          <span class="hb-row__time">${formatDateTime(beat.timestamp)}</span>
+          <span class="badge badge--${escHtml(beat.status)}">${hbStatusIcon(beat.status)} ${escHtml(beat.status)}</span>
+          <span class="hb-row__message">${escHtml(beat.message || '')}</span>
+        `;
+        logContainer.appendChild(row);
+      });
+    }
+
+    return frag;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Heartbeat status helpers                                             */
+  /* ------------------------------------------------------------------ */
+  function hbStatusIcon(status) {
+    const icons = { active: '●', ok: '○', failed: '✕' };
+    const icon = icons[status] || '';
+    /* Wrap in aria-hidden so screen readers read only the adjacent text label */
+    return icon ? `<span aria-hidden="true">${icon}</span>` : '';
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* View switching                                                       */
+  /* ------------------------------------------------------------------ */
+  function switchView(view) {
+    state.activeView = view;
+
+    dom.tabFlows.classList.toggle('nav__tab--active', view === 'flows');
+    dom.tabHeartbeats.classList.toggle('nav__tab--active', view === 'heartbeats');
+    dom.tabFlows.setAttribute('aria-selected', view === 'flows');
+    dom.tabHeartbeats.setAttribute('aria-selected', view === 'heartbeats');
+
+    if (view === 'flows') {
+      dom.sidebarFlows.removeAttribute('hidden');
+      dom.mainFlows.removeAttribute('hidden');
+      dom.sidebarHeartbeats.setAttribute('hidden', '');
+      dom.mainHeartbeats.setAttribute('hidden', '');
+    } else {
+      dom.sidebarHeartbeats.removeAttribute('hidden');
+      dom.mainHeartbeats.removeAttribute('hidden');
+      dom.sidebarFlows.setAttribute('hidden', '');
+      dom.mainFlows.setAttribute('hidden', '');
+    }
+
+    render();
+  }
+
+  /* ------------------------------------------------------------------ */
   /* Bootstrap                                                            */
   /* ------------------------------------------------------------------ */
   document.addEventListener('DOMContentLoaded', () => {
     dom = {
-      refreshBtn:   document.getElementById('refresh-btn'),
-      lastUpdated:  document.getElementById('last-updated'),
-      flowCount:    document.getElementById('flow-count'),
-      sidebarCount: document.getElementById('sidebar-count'),
-      sidebarList:  document.getElementById('flow-list'),
-      mainPanel:    document.getElementById('main-panel'),
+      refreshBtn:       document.getElementById('refresh-btn'),
+      lastUpdated:      document.getElementById('last-updated'),
+      flowCount:        document.getElementById('flow-count'),
+      dataLabel:        document.getElementById('data-label'),
+      /* Flows */
+      sidebarFlows:     document.getElementById('sidebar-flows'),
+      sidebarCount:     document.getElementById('sidebar-count'),
+      sidebarList:      document.getElementById('flow-list'),
+      mainFlows:        document.getElementById('main-flows'),
+      /* Heartbeats */
+      sidebarHeartbeats: document.getElementById('sidebar-heartbeats'),
+      hbSidebarCount:   document.getElementById('hb-sidebar-count'),
+      agentList:        document.getElementById('agent-list'),
+      mainHeartbeats:   document.getElementById('main-heartbeats'),
+      /* Navigation */
+      tabFlows:         document.getElementById('tab-flows'),
+      tabHeartbeats:    document.getElementById('tab-heartbeats'),
     };
 
-    dom.refreshBtn.addEventListener('click', fetchFlows);
+    dom.refreshBtn.addEventListener('click', () => {
+      if (state.activeView === 'flows') fetchFlows();
+      else fetchHeartbeats();
+    });
 
+    dom.tabFlows.addEventListener('click', () => switchView('flows'));
+    dom.tabHeartbeats.addEventListener('click', () => switchView('heartbeats'));
+
+    /* Initial fetch for both views */
     fetchFlows();
+    fetchHeartbeats();
+
+    /* Auto-refresh both every 30 s */
     setInterval(fetchFlows, AUTO_REFRESH_MS);
+    setInterval(fetchHeartbeats, AUTO_REFRESH_MS);
   });
 
 })();

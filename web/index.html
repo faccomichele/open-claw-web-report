@@ -26,11 +26,11 @@
           <!-- Wrist -->
           <line x1="16" y1="20" x2="16" y2="25" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round"/>
         </svg>
-        <span>Open Claw&nbsp;&mdash;&nbsp;Activity Flows</span>
+        <span>Open Claw</span>
       </div>
 
       <div class="header__meta">
-        <span id="flow-count">0</span> flows
+        <span id="flow-count">0</span> <span id="data-label">flows</span>
         <span id="last-updated"></span>
 
         <button id="refresh-btn" class="header__refresh-btn" title="Refresh data" aria-label="Refresh">
@@ -45,8 +45,30 @@
       </div>
     </header>
 
-    <!-- ===== Sidebar ===== -->
-    <aside class="sidebar" aria-label="Flow list">
+    <!-- ===== Navigation tabs ===== -->
+    <nav class="nav" id="app-nav" role="tablist" aria-label="Dashboard sections">
+      <button class="nav__tab nav__tab--active" id="tab-flows"
+              role="tab" aria-selected="true" aria-controls="sidebar-flows">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Flows
+      </button>
+      <button class="nav__tab" id="tab-heartbeats"
+              role="tab" aria-selected="false" aria-controls="sidebar-heartbeats">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        Heartbeats
+      </button>
+    </nav>
+
+    <!-- ===== Flows: Sidebar ===== -->
+    <aside class="sidebar" id="sidebar-flows" aria-label="Flow list">
       <div class="sidebar__header">
         <span class="sidebar__title">Flows</span>
         <span class="sidebar__count" id="sidebar-count">0</span>
@@ -54,11 +76,28 @@
       <ul class="sidebar__list" id="flow-list" role="list" aria-label="Agent activity flows"></ul>
     </aside>
 
-    <!-- ===== Main panel ===== -->
-    <main class="main" id="main-panel" aria-live="polite" aria-label="Flow detail">
+    <!-- ===== Flows: Main panel ===== -->
+    <main class="main" id="main-flows" aria-live="polite" aria-label="Flow detail">
       <div class="loader">
         <div class="loader__ring"></div>
         <span>Loading flows&hellip;</span>
+      </div>
+    </main>
+
+    <!-- ===== Heartbeats: Sidebar ===== -->
+    <aside class="sidebar" id="sidebar-heartbeats" aria-label="Agent list" hidden>
+      <div class="sidebar__header">
+        <span class="sidebar__title">Agents</span>
+        <span class="sidebar__count" id="hb-sidebar-count">0</span>
+      </div>
+      <ul class="sidebar__list" id="agent-list" role="list" aria-label="Agent heartbeat status"></ul>
+    </aside>
+
+    <!-- ===== Heartbeats: Main panel ===== -->
+    <main class="main" id="main-heartbeats" aria-live="polite" aria-label="Agent heartbeat detail" hidden>
+      <div class="loader">
+        <div class="loader__ring"></div>
+        <span>Loading heartbeats&hellip;</span>
       </div>
     </main>
 
