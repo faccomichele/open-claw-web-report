@@ -1,0 +1,47 @@
+# This triggers on all merged PRs into main
+
+name: Main - Deploy
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      full-rebuild:
+        description: 'Perform a full rebuild (including Lambda and Docker artifacts)'
+        type: choice
+        required: true
+        default: 'no'
+        options:
+          - 'yes'
+          - 'no'
+
+permissions:
+  id-token: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  dev:
+    if: ${{ always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') && (github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)) }}
+    name: "[DEV]"
+    uses: faccomichele/utils-n-scripts/.github/workflows/terraform-run.yml@main
+    with:
+      environment: 'dev'
+      region: 'eu-central-1'
+      working-directory: './terraform'
+      action: 'apply'
+      upload-output-artifact: true
+    secrets: inherit
+
+  dev-website:
+    needs: dev
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true) }}
+    name: "[DEV-WEBSITE]"
+    uses: faccomichele/utils-n-scripts/.github/workflows/deploy-website.yml@main
+    with:
+      environment: 'dev'
+      region: 'eu-central-1'
+      working-directory: './website'
+    secrets: inherit
