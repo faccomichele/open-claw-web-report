@@ -7,15 +7,6 @@ on:
     types: [closed]
     branches: [main]
   workflow_dispatch:
-    inputs:
-      full-rebuild:
-        description: 'Perform a full rebuild (including Lambda and Docker artifacts)'
-        type: choice
-        required: true
-        default: 'no'
-        options:
-          - 'yes'
-          - 'no'
 
 permissions:
   id-token: write
@@ -43,5 +34,5 @@ jobs:
     with:
       environment: 'dev'
       region: 'eu-central-1'
-      working-directory: './website'
+      working-directory: './web'
     secrets: inherit
