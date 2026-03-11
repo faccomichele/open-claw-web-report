@@ -4,8 +4,8 @@
 locals {
   # Unique bucket name based on project name + AWS account ID.
   # Account ID keeps names globally unique without requiring user input.
-  website_bucket_name = "${var.project_name}-${data.aws_caller_identity.current.account_id}"
-  log_bucket_name     = "${var.project_name}-logs-${data.aws_caller_identity.current.account_id}${var.log_bucket_suffix}"
+  website_bucket_name = "${local.project_name}-${data.aws_caller_identity.current.account_id}"
+  log_bucket_name     = "${local.project_name}-logs-${data.aws_caller_identity.current.account_id}${var.log_bucket_suffix}"
 
   # S3 key prefix used to store flow JSON data files inside the website bucket.
   data_prefix = "data/"
@@ -104,8 +104,8 @@ resource "aws_s3_bucket_ownership_controls" "logs" {
 # CloudFront — Origin Access Control (OAC)
 ###############################################################################
 resource "aws_cloudfront_origin_access_control" "website" {
-  name                              = "${var.project_name}-oac"
-  description                       = "OAC for ${var.project_name} website bucket"
+  name                              = "${local.project_name}-oac"
+  description                       = "OAC for ${local.project_name} website bucket"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -116,7 +116,7 @@ resource "aws_cloudfront_origin_access_control" "website" {
 ###############################################################################
 resource "aws_cloudfront_distribution" "website" {
   enabled             = true
-  comment             = "${var.project_name} (${var.environment})"
+  comment             = "${local.project_name} (${local.environment})"
   default_root_object = "index.html"
   price_class         = var.cloudfront_price_class
   http_version        = "http2"
