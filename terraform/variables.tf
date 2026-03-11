@@ -1,19 +1,7 @@
-variable "aws_region" {
-  description = "AWS region where all resources are created."
-  type        = string
-  default     = "us-east-1"
-}
 
-variable "environment" {
-  description = "Deployment environment label (e.g. dev, staging, prod)."
-  type        = string
-  default     = "prod"
-}
-
-variable "project_name" {
-  description = "Short project identifier used to namespace S3 bucket names and other resources."
-  type        = string
-  default     = "open-claw-web-report"
+variable "tags" {
+  description = "Map of tags to assign to resources"
+  type        = map(string)
 }
 
 variable "cloudfront_price_class" {
