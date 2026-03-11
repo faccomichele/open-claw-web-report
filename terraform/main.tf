@@ -4,8 +4,8 @@
 locals {
   # Unique bucket name based on project name + AWS account ID.
   # Account ID keeps names globally unique without requiring user input.
-  website_bucket_name = "${local.project_name}-${data.aws_caller_identity.current.account_id}"
-  log_bucket_name     = "${local.project_name}-logs-${data.aws_caller_identity.current.account_id}${var.log_bucket_suffix}"
+  website_bucket_name = "${local.project_name}-${local.environment}-${data.aws_caller_identity.current.account_id}"
+  log_bucket_name     = "${local.project_name}-cloudfront-logs-${local.environment}-${data.aws_caller_identity.current.account_id}${var.log_bucket_suffix}"
 
   # S3 key prefix used to store flow JSON data files inside the website bucket.
   data_prefix = "data/"

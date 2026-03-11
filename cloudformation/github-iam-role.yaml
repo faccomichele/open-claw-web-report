@@ -109,15 +109,36 @@ Resources:
                   - s3:List*
                   - s3:DeleteObject
                 Resource:
-                  - !Sub 'arn:aws:s3:::${ProjectName}-bot-storage-${Environment}-${AWS::AccountId}'
-                  - !Sub 'arn:aws:s3:::${ProjectName}-bot-storage-${Environment}-${AWS::AccountId}/*'
-     
+                  - !Sub 'arn:aws:s3:::${ProjectName}-${Environment}-${AWS::AccountId}*'
+                  - !Sub 'arn:aws:s3:::${ProjectName}-cloudfront-logs-${Environment}-${AWS::AccountId}*'
+
+              # CloudFront permissions for CDN distribution and Origin Access Control
+              - Sid: CloudFrontManagement
+                Effect: Allow
+                Action:
+                  - cloudfront:CreateOriginAccessControl
+                  - cloudfront:GetOriginAccessControl
+                  - cloudfront:UpdateOriginAccessControl
+                  - cloudfront:DeleteOriginAccessControl
+                  - cloudfront:CreateDistribution
+                  - cloudfront:GetDistribution
+                  - cloudfront:GetDistributionConfig
+                  - cloudfront:UpdateDistribution
+                  - cloudfront:DeleteDistribution
+                  - cloudfront:TagResource
+                  - cloudfront:ListTagsForResource
+                  - cloudfront:GetInvalidation
+                  - cloudfront:CreateInvalidation
+                Resource: '*'
+
               # Terraform state and resource discovery
               # Wildcard resource access is required for list/discovery operations that Terraform
               # uses to refresh state and detect drift.
               - Sid: ResourceDiscovery
                 Effect: Allow
                 Action:
+                  - cloudfront:ListDistributions
+                  - cloudfront:ListCloudFrontOriginAccessIdentities
                   - s3:ListAllMyBuckets
                   - iam:ListRoles
                 Resource: '*'
